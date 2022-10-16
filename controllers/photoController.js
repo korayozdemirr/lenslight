@@ -1,6 +1,6 @@
 import Photo from "../models/photoModels.js";
 import { v2 as cloudinary } from "cloudinary";
-import fs from "fs"
+import fs from "fs";
 
 const createPhoto = async (req, res) => {
   const result = await cloudinary.uploader.upload(
@@ -18,7 +18,7 @@ const createPhoto = async (req, res) => {
       url: result.secure_url,
     });
 
-    fs.unlinkSync(req.files.image.tempFilePath)
+    fs.unlinkSync(req.files.image.tempFilePath);
     res.status(201).redirect("/users/dashboard");
   } catch (error) {
     res.status(500).json({
@@ -30,7 +30,9 @@ const createPhoto = async (req, res) => {
 
 const getAllPhotos = async (req, res) => {
   try {
-    const photos = await Photo.find({});
+    const photos = res.locals.user
+      ? await Photo.find({ user: { $ne: res.locals.user._id } })
+      : await Photo.find({});
     res.status(200).render("photos", {
       photos,
       link: "photos",
