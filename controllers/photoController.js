@@ -2,15 +2,16 @@ import Photo from "../models/photoModels.js";
 
 const createPhoto = async (req, res) => {
   try {
-    const photo = await Photo.create(req.body);
-    res.status(201).json({
-      succeded: true,
-      photo
+    await Photo.create({
+      name: req.body.name,
+      description: req.body.description,
+      user: res.locals.user._id,
     });
+    res.status(201).redirect("/users/dashboard");
   } catch (error) {
     res.status(500).json({
       succeded: false,
-      error
+      error,
     });
   }
 };
@@ -20,12 +21,12 @@ const getAllPhotos = async (req, res) => {
     const photos = await Photo.find({});
     res.status(200).render("photos", {
       photos,
-      link: "photos"
+      link: "photos",
     });
   } catch (error) {
     res.status(500).json({
       succeded: false,
-      error
+      error,
     });
   }
 };
@@ -33,16 +34,16 @@ const getAllPhotos = async (req, res) => {
 const getAPhoto = async (req, res) => {
   try {
     const photo = await Photo.findById({
-      _id: req.params.id
+      _id: req.params.id,
     });
     res.status(200).render("photo", {
       photo,
-      link: "photos"
+      link: "photos",
     });
   } catch (error) {
     res.status(500).json({
       succeded: false,
-      error
+      error,
     });
   }
 };
