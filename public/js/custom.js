@@ -204,10 +204,3 @@ function navLinkClick() {
 
 
 
-/* date_picker js */
-
-$(function () {
-  $("#my_date_picker").datepicker({
-    defaultDate: "09/22/2019"
-  });
-});
